@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Impactt.API.Models;
 
-public class TimePeriod
+public class TimePeriodModel
 {
     [JsonPropertyName("start")]
     public DateTime Start { get; set; }

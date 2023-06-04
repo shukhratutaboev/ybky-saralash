@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Impactt.API.Models;
 
-public class Room
+public class RoomModel
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }
