@@ -12,7 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ImpacttDB>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ImpacttDB"));
+    options.UseSnakeCaseNamingConvention();
 });
 
 var app = builder.Build();

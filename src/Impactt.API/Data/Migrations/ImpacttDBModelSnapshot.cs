@@ -26,49 +26,68 @@ namespace Impactt.API.Data.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("End")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_time");
 
                     b.Property<string>("Resident")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("resident");
 
                     b.Property<long>("RoomId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("room_id");
 
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_time");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_booked_times");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("RoomId", "StartTime", "EndTime")
+                        .IsUnique()
+                        .HasDatabaseName("ix_booked_times_room_id_start_time_end_time");
 
-                    b.ToTable("booked_time", (string)null);
+                    b.ToTable("booked_times", (string)null);
                 });
 
             modelBuilder.Entity("Impactt.API.Entities.Room", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<int>("Capacity")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("capacity");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
                     b.Property<string>("Type")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_rooms");
 
-                    b.ToTable("room", (string)null);
+                    b.ToTable("rooms", (string)null);
                 });
 
             modelBuilder.Entity("Impactt.API.Entities.BookedTime", b =>
@@ -77,7 +96,8 @@ namespace Impactt.API.Data.Migrations
                         .WithMany("BookedTimes")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_booked_times_rooms_room_id");
 
                     b.Navigation("Room");
                 });
