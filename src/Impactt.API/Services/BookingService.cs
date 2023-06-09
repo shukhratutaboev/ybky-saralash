@@ -3,51 +3,51 @@ using Impactt.API.Models;
 using Impactt.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Impactt.API.Services
+namespace Impactt.API.Services;
+
+public class BookingService : IBookingService
 {
-    public class BookingService
+    private readonly ILogger<BookingService> _logger;
+    private readonly IRoomsRepository _roomsRepository;
+    private readonly IBookedTimesRepository _bookedTimesRepository;
+
+    public BookingService(
+        ILogger<BookingService> logger,
+        IRoomsRepository roomsRepository,
+        IBookedTimesRepository bookedTimesRepository)
     {
-        private readonly ILogger<BookingService> _logger;
-        private readonly IRoomsRepository _roomsRepository;
-        private readonly IBookedTimesRepository _bookedTimesRepository;
+        _logger = logger;
+        _roomsRepository = roomsRepository;
+        _bookedTimesRepository = bookedTimesRepository;
+    }
 
-        public BookingService(
-            ILogger<BookingService> logger,
-            IRoomsRepository roomsRepository,
-            IBookedTimesRepository bookedTimesRepository)
+    public async Task<Pagination<RoomModel>> GetRoomsAsync(GetRoomsQueryModel query)
+    {
+        var rooms = await _roomsRepository.GetRoomsQueryableAsync();
+
+        if (!string.IsNullOrWhiteSpace(query.Search))
         {
-            _logger = logger;
-            _roomsRepository = roomsRepository;
-            _bookedTimesRepository = bookedTimesRepository;
+            rooms = rooms.Where(e => e.Name.StartsWith(query.Search));
         }
 
-        public async Task<Pagination<RoomModel>> GetRoomsAsync(GetRoomsQueryModel query)
+        if (!string.IsNullOrWhiteSpace(query.Type))
         {
-            var rooms = await _roomsRepository.GetRoomsQueryableAsync();
-
-            if (!string.IsNullOrWhiteSpace(query.Search))
-            {
-                rooms = rooms.Where(e => e.Name.StartsWith(query.Search));
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.Type))
-            {
-                rooms = rooms.Where(e => e.Type == query.Type);
-            }
-
-            var count = await rooms.CountAsync();
-
-            rooms = rooms
-                .Skip((query.Page - 1) * query.PageSize)
-                .Take(query.PageSize);
-
-            return new Pagination<RoomModel>
-            {
-                PageNumber = query.Page,
-                PageSize = query.PageSize,
-                Count = count,
-                Results = rooms.Select(r => r.ToModel())
-            };
+            rooms = rooms.Where(e => e.Type == query.Type);
         }
+
+        var count = await rooms.CountAsync();
+
+        rooms = rooms
+            .OrderBy(e => e.Id)
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize);
+
+        return new Pagination<RoomModel>
+        {
+            PageNumber = query.Page,
+            PageSize = query.PageSize,
+            Count = count,
+            Results = rooms.Select(r => r.ToModel())
+        };
     }
 }
