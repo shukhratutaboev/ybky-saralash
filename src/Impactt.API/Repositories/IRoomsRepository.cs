@@ -4,7 +4,7 @@ namespace Impactt.API.Repositories
 {
     public interface IRoomsRepository
     {
-        Task<IEnumerable<Room>> GetRoomsAsync();
+        Task<IQueryable<Room>> GetRoomsQueryableAsync();
         Task<Room> GetRoomAsync(long id);
     }
 }

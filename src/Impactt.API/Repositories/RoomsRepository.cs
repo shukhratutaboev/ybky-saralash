@@ -23,9 +23,8 @@ public class RoomsRepository : IRoomsRepository
             .FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<IEnumerable<Room>> GetRoomsAsync()
+    public async Task<IQueryable<Room>> GetRoomsQueryableAsync()
     {
-        return await _context.Rooms
-            .ToListAsync();
+        return _context.Rooms;
     }
 }
