@@ -1,0 +1,92 @@
+[
+    {
+        "Id": 1,
+        "Name": "mytaxi",
+        "Type": "focus",
+        "Capacity": 1
+    },
+    {
+        "Id": 2,
+        "Name": "workly",
+        "Type": "team",
+        "Capacity": 5
+    },
+    {
+        "Id": 3,
+        "Name": "express24",
+        "Type": "conference",
+        "Capacity": 15
+    },
+    {
+        "Id": 4,
+        "Name": "amazon",
+        "Type": "focus",
+        "Capacity": 4
+    },
+    {
+        "Id": 5,
+        "Name": "google",
+        "Type": "team",
+        "Capacity": 10
+    },
+    {
+        "Id": 6,
+        "Name": "meta",
+        "Type": "conference",
+        "Capacity": 24
+    },
+    {
+        "Id": 7,
+        "Name": "uber",
+        "Type": "focus",
+        "Capacity": 2
+    },
+    {
+        "Id": 8,
+        "Name": "twitter",
+        "Type": "conference",
+        "Capacity": 20
+    },
+    {
+        "Id": 9,
+        "Name": "apple",
+        "Type": "focus",
+        "Capacity": 3
+    },
+    {
+        "Id": 10,
+        "Name": "microsoft",
+        "Type": "team",
+        "Capacity": 6
+    },
+    {
+        "Id": 11,
+        "Name": "yandex",
+        "Type": "conference",
+        "Capacity": 18
+    },
+    {
+        "Id": 12,
+        "Name": "yahoo",
+        "Type": "focus",
+        "Capacity": 2
+    },
+    {
+        "Id": 13,
+        "Name": "oracle",
+        "Type": "team",
+        "Capacity": 7
+    },
+    {
+        "Id": 14,
+        "Name": "intel",
+        "Type": "conference",
+        "Capacity": 16
+    },
+    {
+        "Id": 15,
+        "Name": "ibm",
+        "Type": "focus",
+        "Capacity": 2
+    }
+]

@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Impactt.API.Data.Migrations
 {
     /// <inheritdoc />
@@ -49,11 +51,42 @@ namespace Impactt.API.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "rooms",
+                columns: new[] { "id", "capacity", "name", "type" },
+                values: new object[,]
+                {
+                    { 1L, 1, "mytaxi", "focus" },
+                    { 2L, 5, "workly", "team" },
+                    { 3L, 15, "express24", "conference" },
+                    { 4L, 4, "amazon", "focus" },
+                    { 5L, 10, "google", "team" },
+                    { 6L, 24, "meta", "conference" },
+                    { 7L, 2, "uber", "focus" },
+                    { 8L, 20, "twitter", "conference" },
+                    { 9L, 3, "apple", "focus" },
+                    { 10L, 6, "microsoft", "team" },
+                    { 11L, 18, "yandex", "conference" },
+                    { 12L, 2, "yahoo", "focus" },
+                    { 13L, 7, "oracle", "team" },
+                    { 14L, 16, "intel", "conference" },
+                    { 15L, 2, "ibm", "focus" }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "ix_booked_times_room_id_start_time_end_time",
+                name: "ix_booked_times_end_time",
                 table: "booked_times",
-                columns: new[] { "room_id", "start_time", "end_time" },
-                unique: true);
+                column: "end_time");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_booked_times_room_id",
+                table: "booked_times",
+                column: "room_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_booked_times_start_time",
+                table: "booked_times",
+                column: "start_time");
         }
 
         /// <inheritdoc />

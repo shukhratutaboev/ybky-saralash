@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Impactt.API.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,11 @@ public class ImpacttDB : DbContext
         modelBuilder.Entity<BookedTime>().ToTable("booked_times");
         modelBuilder.Entity<Room>().ToTable("rooms");
 
+        var json = File.ReadAllText("Data/SeedData.json");
+        var rooms = JsonSerializer.Deserialize<List<Room>>(json);
+
+        modelBuilder.Entity<Room>().HasData(rooms);
+
         modelBuilder.Entity<BookedTime>(b =>
         {
             b.Property(e => e.Id)
@@ -25,8 +31,8 @@ public class ImpacttDB : DbContext
                 .IsRequired()
                 .HasMaxLength(50);
 
-            b.HasIndex(e => new { e.RoomId, e.StartTime, e.EndTime })
-                .IsUnique();
+            b.HasIndex(e => e.StartTime);
+            b.HasIndex(e => e.EndTime);
             
             b.HasKey(e => e.Id);
         });
