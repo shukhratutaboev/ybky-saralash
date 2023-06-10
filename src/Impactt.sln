@@ -3,20 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Impactt.API", "Impactt.API\Impactt.API.csproj", "{9E08001E-20AB-4939-8986-5710BA1D2E9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Impactt.API", "Impactt.API\Impactt.API.csproj", "{9E08001E-20AB-4939-8986-5710BA1D2E9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Impactt.Test", "Impactt.Test\Impactt.Test.csproj", "{4120A654-4DB0-4C02-8037-D9058092AA8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9E08001E-20AB-4939-8986-5710BA1D2E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E08001E-20AB-4939-8986-5710BA1D2E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E08001E-20AB-4939-8986-5710BA1D2E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E08001E-20AB-4939-8986-5710BA1D2E9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4120A654-4DB0-4C02-8037-D9058092AA8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4120A654-4DB0-4C02-8037-D9058092AA8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4120A654-4DB0-4C02-8037-D9058092AA8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4120A654-4DB0-4C02-8037-D9058092AA8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {521D6A3A-14FA-41D7-83D3-AC8BADF97AAD}
 	EndGlobalSection
 EndGlobal
