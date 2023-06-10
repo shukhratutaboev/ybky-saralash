@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Impactt.API.csproj", "Impactt.API/"]
+COPY ["Impactt.API/Impactt.API.csproj", "Impactt.API/"]
 RUN dotnet restore "Impactt.API/Impactt.API.csproj"
 COPY . .
 WORKDIR "/src/Impactt.API"
