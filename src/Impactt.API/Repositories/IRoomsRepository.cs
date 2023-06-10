@@ -1,10 +1,9 @@
 using Impactt.API.Entities;
 
-namespace Impactt.API.Repositories
+namespace Impactt.API.Repositories;
+
+public interface IRoomsRepository
 {
-    public interface IRoomsRepository
-    {
-        Task<IQueryable<Room>> GetRoomsQueryableAsync();
-        Task<Room> GetRoomAsync(long id);
-    }
+    Task<IQueryable<Room>> GetRoomsQueryableAsync();
+    Task<Room> GetRoomAsync(long id);
 }
