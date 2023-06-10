@@ -1,0 +1,49 @@
+name: Deploy project to AWS EC2
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore src/Impactt.sln
+    - name: Build
+      run: dotnet build src/Impactt.sln --no-restore
+    - name: Test
+      run: dotnet test src/Impactt.Test/Impactt.Test.csproj --no-build --verbosity normal
+  
+  dockerize:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      -
+        name: Build and push test-bot
+        uses: docker/build-push-action@v2
+        with:
+          file: src/Impactt.API/Dockerfile
+          push: true
+          tags: shukhratutaboev/impactt-api:latest
+          no-cache: true
