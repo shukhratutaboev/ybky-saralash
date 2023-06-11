@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  postgesql:
+    container_name: postgresql
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: strongpassword
+    ports:
+      - 5432:5432
+    volumes:
+      - /root/.data:/var/lib/postgresql/data
+  
+  impacttapi:
+    container_name: impacttapi
+    depends_on:
+      - postgesql
+    ports:
+      - 8080:80
+    build: 
+      context: .
+      dockerfile: src/Impactt.API/Dockerfile
+    environment:
+      - "ConnectionStrings:ImpacttDb=Host=postgresql;Port=5432;Database=impacttdb;Username=postgres;Password=strongpassword"
