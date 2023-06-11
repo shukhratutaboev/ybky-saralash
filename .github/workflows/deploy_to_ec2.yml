@@ -55,8 +55,8 @@ jobs:
     steps:
       - name: Deploy Docker containers
         run: |
-          cd ../
+          cd ../../../..
           pwd
           docker rm --force impacttapi
           docker image prune -a
-          docker-compose up -d
+          docker compose up -d
