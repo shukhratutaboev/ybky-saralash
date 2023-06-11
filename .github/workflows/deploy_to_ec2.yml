@@ -62,7 +62,6 @@ jobs:
       - name: Deploy Docker containers
         run: |
           cd ../../../..
-          pwd
-          docker rm --force impacttapi
-          docker image prune -a
-          docker compose up -d
+          docker pull shukhratutaboev/impactt-api:latest
+          docker rm -f impactt-api
+          docker compose up -d impactt-api
