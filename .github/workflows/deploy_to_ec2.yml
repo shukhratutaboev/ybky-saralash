@@ -51,7 +51,7 @@ jobs:
         name: Build and push test-bot
         uses: docker/build-push-action@v2
         with:
-          file: src/Impactt.API/Dockerfile
+          file: Impactt.API/Dockerfile
           push: true
           tags: shukhratutaboev/impactt-api:latest
           no-cache: true
