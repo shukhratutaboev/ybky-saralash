@@ -1,5 +1,3 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -7,10 +5,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/Impactt.API/Impactt.API.csproj", "src/Impactt.API/"]
-RUN dotnet restore "src/Impactt.API/Impactt.API.csproj"
+COPY ["Impactt.API/Impactt.API.csproj", "Impactt.API/"]
+RUN dotnet restore "Impactt.API/Impactt.API.csproj"
 COPY . .
-WORKDIR "/src/src/Impactt.API"
+WORKDIR "/src/Impactt.API"
 RUN dotnet build "Impactt.API.csproj" -c Release -o /app/build
 
 FROM build AS publish

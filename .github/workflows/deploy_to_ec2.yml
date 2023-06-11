@@ -25,8 +25,15 @@ jobs:
       run: dotnet test src/Impactt.Test/Impactt.Test.csproj --no-build --verbosity normal
   
   dockerize:
+
     runs-on: ubuntu-latest
+
     needs: build
+
+    defaults:
+      run:
+        working-directory: ./src/
+
     steps:
       -
         name: Set up QEMU
@@ -50,8 +57,11 @@ jobs:
           no-cache: true
   
   deploy:
+
     runs-on: self-hosted
+
     needs: dockerize
+
     steps:
       - name: Deploy Docker containers
         run: |
