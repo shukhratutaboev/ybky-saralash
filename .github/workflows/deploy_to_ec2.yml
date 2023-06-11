@@ -48,3 +48,10 @@ jobs:
           push: true
           tags: shukhratutaboev/impactt-api:latest
           no-cache: true
+  
+  deploy:
+    runs-on: self-hosted
+    needs: dockerize
+    sreps:
+      - name: deploy docker containers
+        run: cd ../ && pwd && docker rm --force impacttapi && docker image prune -a && docker compose up -d
