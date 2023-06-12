@@ -77,6 +77,20 @@ public class BookingService : IBookingService
 
         var availableTimes = bookedTimes.GetAvailableTimes(date);
 
+        if (date == DateOnly.FromDateTime(DateTime.Today))
+        {
+            var now = DateTime.Now;
+            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
+            now = now.AddMinutes(1);
+            
+            availableTimes = availableTimes.Where(e => e.End > now).OrderBy(e => e.Start);
+
+            if (availableTimes.Any() && availableTimes.First().Start < now)
+            {
+                availableTimes.First().Start = now;
+            }
+        }
+
         return availableTimes;
     }
 }
