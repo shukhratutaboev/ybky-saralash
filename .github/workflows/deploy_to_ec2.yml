@@ -65,4 +65,4 @@ jobs:
           docker pull shukhratutaboev/impactt-api:latest
           docker rm -f impactt-api
           docker compose up -d impactt-api
-          docker image prune -a
+          docker image prune -a --force
