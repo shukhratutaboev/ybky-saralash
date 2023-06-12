@@ -82,7 +82,7 @@ public class BookingService : IBookingService
             var now = DateTime.Now;
             now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             now = now.AddMinutes(1);
-            
+
             availableTimes = availableTimes.Where(e => e.End > now).OrderBy(e => e.Start);
 
             if (availableTimes.Any() && availableTimes.First().Start < now)
@@ -92,5 +92,28 @@ public class BookingService : IBookingService
         }
 
         return availableTimes;
+    }
+
+    public async Task<BookedTimeModel> BookRoomAsync(long id, BookedTimeModel model)
+    {
+        var room = await _roomsRepository.GetRoomAsync(id);
+
+        if (room == null)
+        {
+            return null;
+        }
+
+        if (await _bookedTimesRepository.IsAvailableAsync(id, model.Start, model.End) == false)
+        {
+            return null;
+        }
+
+        var bookedTime = model.ToEntity();
+
+        bookedTime.RoomId = id;
+
+        await _bookedTimesRepository.AddBookedTimeAsync(bookedTime);
+
+        return bookedTime.ToModel();
     }
 }

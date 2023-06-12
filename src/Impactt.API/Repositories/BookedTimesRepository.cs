@@ -37,4 +37,16 @@ public class BookedTimesRepository : IBookedTimesRepository
             .OrderBy(e => e.StartTime)
             .ToListAsync();
     }
+
+    public async Task<bool> IsAvailableAsync(long roomId, DateTime startTime, DateTime endTime)
+    {
+        var overlapping = await _context.BookedTimes
+            .Where(e => e.RoomId == roomId &&
+                ((e.StartTime >= startTime && e.StartTime < endTime) ||
+                    (e.EndTime > startTime && e.EndTime <= endTime) ||
+                    (e.StartTime <= startTime && e.EndTime >= endTime)))
+            .AnyAsync();
+
+        return !overlapping;
+    }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Impactt.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/rooms")]
 public class BookingController : ControllerBase
 {
     private readonly ILogger<BookingController> _logger;
@@ -20,7 +20,7 @@ public class BookingController : ControllerBase
         _bookingService = bookingService;
     }
 
-    [HttpGet("rooms")]
+    [HttpGet]
     public async Task<ActionResult<Pagination<RoomModel>>> GetRoomsAsync([FromQuery] GetRoomsQueryModel query)
     {
         var rooms = await _bookingService.GetRoomsAsync(query);
@@ -28,7 +28,7 @@ public class BookingController : ControllerBase
         return Ok(rooms);
     }
 
-    [HttpGet("rooms/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<RoomModel>> GetRoomAsync(int id)
     {
         var room = await _bookingService.GetRoomAsync(id);
@@ -41,7 +41,7 @@ public class BookingController : ControllerBase
         return Ok(room);
     }
 
-    [HttpGet("rooms/{id}/availability")]
+    [HttpGet("{id}/availability")]
     public async Task<ActionResult<IEnumerable<AvailableTimeModel>>> GetRoomAvailableTimesAsync(int id, [FromQuery] string date)
     {
         var result = DateOnly.TryParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateOnly);
@@ -68,5 +68,18 @@ public class BookingController : ControllerBase
         }
 
         return Ok(availableTimes);
+    }
+
+    [HttpPost("{id}/book")]
+    public async Task<IActionResult> BookRoomAsync(int id, [FromBody] BookedTimeModel model)
+    {
+        var bookedTime = await _bookingService.BookRoomAsync(id, model);
+
+        if (bookedTime == null)
+        {
+            return NotFound(new { error = "topilmadi" });
+        }
+
+        return new ObjectResult(new { message = "xona muvaffaqiyatli band qilindi" }) { StatusCode = 201 };
     }
 }
