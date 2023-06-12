@@ -1,4 +1,5 @@
 using System.Globalization;
+using Impactt.API.Exceptions;
 using Impactt.API.Models;
 using Impactt.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -52,20 +53,10 @@ public class BookingController : ControllerBase
         }
         else if (!result)
         {
-            return BadRequest(new { error = "sana noto'g'ri kiritilgan (dd-MM-yyyy)" });
-        }
-
-        if (dateOnly < DateOnly.FromDateTime(DateTime.Today))
-        {
-            return BadRequest(new { error = "o'tib ketgan sana kiritilgan" });
+            throw new ApiException("sana noto'g'ri kiritilgan (dd-MM-yyyy)", 400);
         }
 
         var availableTimes = await _bookingService.GetRoomAvailableTimes(id, dateOnly);
-
-        if (availableTimes == null)
-        {
-            return NotFound(new { error = "topilmadi" });
-        }
 
         return Ok(availableTimes);
     }
@@ -73,12 +64,7 @@ public class BookingController : ControllerBase
     [HttpPost("{id}/book")]
     public async Task<IActionResult> BookRoomAsync(int id, [FromBody] BookedTimeModel model)
     {
-        var bookedTime = await _bookingService.BookRoomAsync(id, model);
-
-        if (bookedTime == null)
-        {
-            return NotFound(new { error = "topilmadi" });
-        }
+        await _bookingService.BookRoomAsync(id, model);
 
         return new ObjectResult(new { message = "xona muvaffaqiyatli band qilindi" }) { StatusCode = 201 };
     }

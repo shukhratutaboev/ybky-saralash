@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Impactt.API.Exceptions;
 
 namespace Impactt.API.Converters;
 
@@ -15,7 +16,7 @@ public class CustomDateTimeConverter : JsonConverter<DateTime>
             return dateTime;
         }
 
-        return default;
+        throw new ApiException("sana noto'g'ri kiritilgan (dd-MM-yyyy HH:mm:ss)", 400);
     }
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Impactt.API.Exceptions;
 using Impactt.API.Helpers;
 using Impactt.API.Mappers;
 using Impactt.API.Models;
@@ -55,24 +56,19 @@ public class BookingService : IBookingService
 
     public async Task<RoomModel> GetRoomAsync(long id)
     {
-        var room = await _roomsRepository.GetRoomAsync(id);
-
-        if (room == null)
-        {
-            return null;
-        }
+        var room = await _roomsRepository.GetRoomAsync(id) ?? throw new ApiException("topilmadi", 404);
 
         return room.ToModel();
     }
 
     public async Task<IEnumerable<AvailableTimeModel>> GetRoomAvailableTimes(long id, DateOnly date)
     {
-        var room = await _roomsRepository.GetRoomAsync(id);
-
-        if (room == null)
+        if (date < DateOnly.FromDateTime(DateTime.Today))
         {
-            return null;
+            throw new ApiException("o'tib ketgan sana kiritilgan", 400);
         }
+
+        var room = await _roomsRepository.GetRoomAsync(id) ?? throw new ApiException("topilmadi", 404);
 
         var bookedTimes = await _bookedTimesRepository.GetRoomBookedTimesAsync(id, date);
 
@@ -84,17 +80,12 @@ public class BookingService : IBookingService
             now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             now = now.AddMinutes(1);
 
-            _logger.LogInformation($"now: {now}");
-            _logger.LogInformation($"availableTimes before filtering: {JsonSerializer.Serialize(availableTimes)}");
-
             availableTimes = availableTimes.Where(e => e.End > now).OrderBy(e => e.Start);
 
             if (availableTimes.Any() && availableTimes.First().Start < now)
             {
                 availableTimes.First().Start = now;
             }
-
-            _logger.LogInformation($"availableTimes after filtering: {JsonSerializer.Serialize(availableTimes)}");
         }
 
         return availableTimes;
@@ -102,16 +93,11 @@ public class BookingService : IBookingService
 
     public async Task<BookedTimeModel> BookRoomAsync(long id, BookedTimeModel model)
     {
-        var room = await _roomsRepository.GetRoomAsync(id);
-
-        if (room == null)
-        {
-            return null;
-        }
+        _ = await _roomsRepository.GetRoomAsync(id) ?? throw new ApiException("topilmadi", 404);
 
         if (await _bookedTimesRepository.IsAvailableAsync(id, model.Start, model.End) == false)
         {
-            return null;
+            throw new ApiException("uzr, siz tanlagan vaqtda xona band", 410);
         }
 
         var bookedTime = model.ToEntity();

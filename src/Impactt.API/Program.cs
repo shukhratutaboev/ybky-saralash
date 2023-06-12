@@ -1,4 +1,5 @@
 using Impactt.API.Data;
+using Impactt.API.Middlewares;
 using Impactt.API.Repositories;
 using Impactt.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 
