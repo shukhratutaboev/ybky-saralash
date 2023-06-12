@@ -50,4 +50,16 @@ public class BookingService : IBookingService
             Results = rooms.Select(r => r.ToModel())
         };
     }
+
+    public async Task<RoomModel> GetRoomAsync(long id)
+    {
+        var room = await _roomsRepository.GetRoomAsync(id);
+
+        if (room == null)
+        {
+            return null;
+        }
+
+        return room.ToModel();
+    }
 }

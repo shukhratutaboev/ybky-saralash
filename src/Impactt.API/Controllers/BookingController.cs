@@ -26,4 +26,17 @@ public class BookingController : ControllerBase
 
         return Ok(rooms);
     }
+
+    [HttpGet("rooms/{id}")]
+    public async Task<ActionResult<RoomModel>> GetRoomAsync(int id)
+    {
+        var room = await _bookingService.GetRoomAsync(id);
+
+        if (room == null)
+        {
+            return NotFound(new { error = "topilmadi" });
+        }
+
+        return Ok(room);
+    }
 }
