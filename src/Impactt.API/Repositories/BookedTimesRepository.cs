@@ -31,9 +31,9 @@ public class BookedTimesRepository : IBookedTimesRepository
 
         return await _context.BookedTimes
             .Where(e => e.RoomId == roomId &&
-                (e.StartTime >= left && e.StartTime < right) ||
+                ((e.StartTime >= left && e.StartTime < right) ||
                 (e.EndTime > left && e.EndTime <= right) ||
-                (e.StartTime <= left && e.EndTime >= right))
+                (e.StartTime <= left && e.EndTime >= right)))
             .OrderBy(e => e.StartTime)
             .ToListAsync();
     }
