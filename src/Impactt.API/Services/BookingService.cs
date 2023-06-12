@@ -80,7 +80,7 @@ public class BookingService : IBookingService
 
         if (date == DateOnly.FromDateTime(DateTime.Today))
         {
-            var now = DateTime.Now;
+            var now = DateTime.Now.ToLocalTime();
             now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             now = now.AddMinutes(1);
 
