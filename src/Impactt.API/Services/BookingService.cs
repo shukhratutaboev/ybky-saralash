@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Impactt.API.Helpers;
 using Impactt.API.Mappers;
 using Impactt.API.Models;
@@ -83,12 +84,17 @@ public class BookingService : IBookingService
             now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             now = now.AddMinutes(1);
 
+            _logger.LogInformation($"now: {now}");
+            _logger.LogInformation($"availableTimes before filtering: {JsonSerializer.Serialize(availableTimes)}");
+
             availableTimes = availableTimes.Where(e => e.End > now).OrderBy(e => e.Start);
 
             if (availableTimes.Any() && availableTimes.First().Start < now)
             {
                 availableTimes.First().Start = now;
             }
+
+            _logger.LogInformation($"availableTimes after filtering: {JsonSerializer.Serialize(availableTimes)}");
         }
 
         return availableTimes;
