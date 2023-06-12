@@ -1,3 +1,4 @@
+using System.Globalization;
 using Impactt.API.Models;
 using Impactt.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -38,5 +39,34 @@ public class BookingController : ControllerBase
         }
 
         return Ok(room);
+    }
+
+    [HttpGet("rooms/{id}/availability")]
+    public async Task<ActionResult<IEnumerable<AvailableTimeModel>>> GetRoomAvailableTimesAsync(int id, [FromQuery] string date)
+    {
+        var result = DateOnly.TryParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateOnly);
+
+        if (!result && string.IsNullOrWhiteSpace(date))
+        {
+            dateOnly = DateOnly.FromDateTime(DateTime.Today);
+        }
+        else if (!result)
+        {
+            return BadRequest(new { error = "sana noto'g'ri kiritilgan (dd-MM-yyyy)" });
+        }
+
+        if (dateOnly < DateOnly.FromDateTime(DateTime.Today))
+        {
+            return BadRequest(new { error = "o'tib ketgan sana kiritilgan" });
+        }
+
+        var availableTimes = await _bookingService.GetRoomAvailableTimes(id, dateOnly);
+
+        if (availableTimes == null)
+        {
+            return NotFound(new { error = "topilmadi" });
+        }
+
+        return Ok(availableTimes);
     }
 }

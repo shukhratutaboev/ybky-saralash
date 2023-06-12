@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ImpacttDB>(options =>
 {
+    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     options.UseNpgsql(builder.Configuration.GetConnectionString("ImpacttDB"));
     options.UseSnakeCaseNamingConvention();
 });

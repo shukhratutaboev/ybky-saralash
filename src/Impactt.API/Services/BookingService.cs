@@ -1,3 +1,4 @@
+using Impactt.API.Helpers;
 using Impactt.API.Mappers;
 using Impactt.API.Models;
 using Impactt.API.Repositories;
@@ -61,5 +62,21 @@ public class BookingService : IBookingService
         }
 
         return room.ToModel();
+    }
+
+    public async Task<IEnumerable<AvailableTimeModel>> GetRoomAvailableTimes(long id, DateOnly date)
+    {
+        var room = await _roomsRepository.GetRoomAsync(id);
+
+        if (room == null)
+        {
+            return null;
+        }
+
+        var bookedTimes = await _bookedTimesRepository.GetRoomBookedTimesAsync(id, date);
+
+        var availableTimes = bookedTimes.GetAvailableTimes(date);
+
+        return availableTimes;
     }
 }
