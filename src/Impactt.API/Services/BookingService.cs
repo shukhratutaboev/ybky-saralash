@@ -93,6 +93,11 @@ public class BookingService : IBookingService
 
     public async Task<BookedTimeModel> BookRoomAsync(long id, BookedTimeModel model)
     {
+        if (model.Start < DateTime.Now.ToLocalTime())
+        {
+            throw new ApiException("o'tib ketgan vaqtda buyurtma berish mumkin emas", 400);
+        }
+
         _ = await _roomsRepository.GetRoomAsync(id) ?? throw new ApiException("topilmadi", 404);
 
         if (await _bookedTimesRepository.IsAvailableAsync(id, model.Start, model.End) == false)
