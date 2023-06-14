@@ -48,7 +48,7 @@ public class BookingServiceTests
         {
             Page = 1,
             PageSize = 3,
-            Type = "team"
+            Type = "team-error"
         };
 
         var result = await _bookingService.GetRoomsAsync(query);
