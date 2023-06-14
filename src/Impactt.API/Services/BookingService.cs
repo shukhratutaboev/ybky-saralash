@@ -1,10 +1,8 @@
-using System.Text.Json;
 using Impactt.API.Exceptions;
 using Impactt.API.Helpers;
 using Impactt.API.Mappers;
 using Impactt.API.Models;
 using Impactt.API.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Impactt.API.Services;
 
@@ -38,7 +36,7 @@ public class BookingService : IBookingService
             rooms = rooms.Where(e => e.Type == query.Type);
         }
 
-        var count = await rooms.CountAsync();
+        var count = rooms.Count();
 
         rooms = rooms
             .OrderBy(e => e.Id)
@@ -61,7 +59,7 @@ public class BookingService : IBookingService
         return room.ToModel();
     }
 
-    public async Task<IEnumerable<AvailableTimeModel>> GetRoomAvailableTimes(long id, DateOnly date)
+    public async Task<IEnumerable<AvailableTimeModel>> GetRoomAvailableTimesAsync(long id, DateOnly date)
     {
         if (date < DateOnly.FromDateTime(DateTime.Today))
         {

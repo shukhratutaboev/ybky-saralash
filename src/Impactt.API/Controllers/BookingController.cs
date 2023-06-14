@@ -56,7 +56,7 @@ public class BookingController : ControllerBase
             throw new ApiException("sana noto'g'ri kiritilgan (dd-MM-yyyy)", 400);
         }
 
-        var availableTimes = await _bookingService.GetRoomAvailableTimes(id, dateOnly);
+        var availableTimes = await _bookingService.GetRoomAvailableTimesAsync(id, dateOnly);
 
         return Ok(availableTimes);
     }
