@@ -1,6 +1,6 @@
 # YBKY dasturi uchun qilingan test topshiriq
 
-Bu repository'da Impact.T coworking uchun qilingan xona band qilish dasturining backend qismi uchun .NET 7 da yozilgan kodi bor.
+Bu repository'da Impact.T coworking uchun qilingan xona band qilish dasturining backend qismining .NET 7 da yozilgan kodi bor.
 
 ## Qo'shimcha imkoniyatlar
 
