@@ -9,7 +9,6 @@ Bu repository'da Impact.T coworking uchun qilingan xona band qilish dasturining 
   * Kodni test qilish.
   * Testdan muvaffaqiyatli o'tgandan so'ng `Dockerfile`dan foydalangan holda docker image yasab dockerhub'ga push qilish.
   * GitHub'ning self hosted runner'idan foydalangan holda Amazon EC2'ga ulanib, serverdagi `docker-compose.yml` file'ni run qilib, [quyidagi](https://ybky.shukhratutaboev.tech/swagger/index.html) domenga deploy qilish.
-* Server tomonda reverse proxy sifatida Nginx ishlatilgan. HTTPS redirection uchun esa Let's encrypt SSL sertifikat ishlatilgan.
 
 ## Database haqida
 
