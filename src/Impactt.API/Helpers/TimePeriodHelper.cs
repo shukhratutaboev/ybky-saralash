@@ -12,7 +12,7 @@ public static class TimePeriodHelper
         var availableTimes = new List<AvailableTimeModel>();
 
         var left = date.ToDateTime(TimeOnly.MinValue);
-        var right = left.AddDays(1);
+        var right = left.AddDays(1).AddSeconds(-1);
 
         var lastEndTime = left;
 
