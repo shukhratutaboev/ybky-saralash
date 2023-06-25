@@ -138,7 +138,7 @@ public class BookingServiceTests
         var result = await _bookingService.GetRoomAvailableTimesAsync(1, DateOnly.FromDateTime(DateTime.Now));
 
         var now = DateTime.Now.ToLocalTime();
-        var end = new DateTime(now.Year, now.Month, now.Day + 1);
+        var end = new DateTime(now.Year, now.Month, now.Day + 1).AddSeconds(-1);
 
         Assert.NotNull(result);
         Assert.Single(result);
