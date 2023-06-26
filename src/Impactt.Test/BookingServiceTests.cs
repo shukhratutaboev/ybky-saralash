@@ -146,6 +146,119 @@ public class BookingServiceTests
         Assert.Equal(result.First().End, end);
     }
 
+    [Fact]
+    public async Task BookRoomAsync_WithValidModel_ReturnsModelAndAvailabeliTimesIncreaseByOne()
+    {
+        var bookedTimes = new List<BookedTime>();
+
+        _bookedTimesRepositoryMock
+            .Setup(e => e.AddBookedTimeAsync(It.IsAny<BookedTime>()))
+            .Callback<BookedTime>(e => bookedTimes.Add(e));
+
+        _bookedTimesRepositoryMock
+            .Setup(e => e.IsAvailableAsync(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(true);
+
+        _bookedTimesRepositoryMock
+            .Setup(e => e.GetRoomBookedTimesAsync(It.IsAny<long>(), It.IsAny<DateOnly>()))
+            .ReturnsAsync((long roomId, DateOnly date) => bookedTimes.AsEnumerable());
+
+        var model = new BookedTimeModel
+        {
+            Start = DateTime.Now.ToLocalTime().AddMinutes(10),
+            End = DateTime.Now.ToLocalTime().AddMinutes(40),
+            Resident = new ResidentModel
+            {
+                Name = "John Doe"
+            }
+        };
+
+        var before = await _bookingService.GetRoomAvailableTimesAsync(1, DateOnly.FromDateTime(DateTime.Now));
+
+        var result = await _bookingService.BookRoomAsync(1, model);
+
+        var after = await _bookingService.GetRoomAvailableTimesAsync(1, DateOnly.FromDateTime(DateTime.Now));
+
+        Assert.NotNull(result);
+        Assert.Single(before);
+        Assert.Equal(2, after.Count());
+    }
+
+    [Fact]
+    public async Task BookRoomAsync_WithInValidTime_ThrowsApiException()
+    {
+        var model = new BookedTimeModel
+        {
+            Start = DateTime.Now.ToLocalTime().AddMinutes(-10),
+            End = DateTime.Now.ToLocalTime().AddMinutes(40),
+            Resident = new ResidentModel
+            {
+                Name = "John Doe"
+            }
+        };
+
+        var act = async () => await _bookingService.BookRoomAsync(1, model);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(act);
+
+        Assert.Equal("o'tib ketgan vaqtda buyurtma berish mumkin emas", exception.Message);
+        Assert.Equal(400, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task BookRoomAsync_WithInValidRoomId_ThrowsApiException()
+    {
+        var model = new BookedTimeModel
+        {
+            Start = DateTime.Now.ToLocalTime().AddMinutes(10),
+            End = DateTime.Now.ToLocalTime().AddMinutes(40),
+            Resident = new ResidentModel
+            {
+                Name = "John Doe"
+            }
+        };
+
+        var act = async () => await _bookingService.BookRoomAsync(100, model);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(act);
+
+        Assert.Equal("topilmadi", exception.Message);
+        Assert.Equal(404, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task BookRoomAsync_WithNotAvailableTime_ThrowsApiException()
+    {
+        var date = DateOnly.FromDateTime(DateTime.Now.AddDays(1));
+
+        var bookedTimes = GetTestBookedTimes(1, date);
+
+        _bookedTimesRepositoryMock
+            .Setup(e => e.IsAvailableAsync(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .ReturnsAsync((long roomId, DateTime startTime, DateTime endTime) => !bookedTimes.Where(e => 
+                    (e.StartTime >= startTime && e.StartTime < endTime) ||
+                        (e.EndTime > startTime && e.EndTime <= endTime) ||
+                        (e.StartTime <= startTime && e.EndTime >= endTime))
+                .Any());
+
+        var model = new BookedTimeModel
+        {
+            Start = date.ToDateTime(new TimeOnly(09, 30)),
+            End = date.ToDateTime(new TimeOnly(11, 30)),
+            Resident = new ResidentModel
+            {
+                Name = "John Doe"
+            }
+        };
+
+        var act = async () => await _bookingService.BookRoomAsync(1, model);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(act);
+
+        Assert.Equal("uzr, siz tanlagan vaqtda xona band", exception.Message);
+        Assert.Equal(410, exception.StatusCode);
+    }
+
     private List<Room> GetTestRooms() => new()
     {
         new Room { Id = 1, Name = "mytaxi", Type = "focus", Capacity = 1 },
